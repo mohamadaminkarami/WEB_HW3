@@ -1,4 +1,5 @@
 import { DataTypes, Model } from "sequelize";
+import bcrypt from "bcrypt";
 import sequelize from "../../utils/sequelize";
 
 class User extends Model {}
@@ -22,4 +23,11 @@ User.init(
   },
   { sequelize }
 );
+User.beforeCreate(async (user) => {
+  user.password = await bcrypt.hash(user.password, 10);
+});
+User.prototype.isValidPassword = async function (password) {
+  return bcrypt.compare(password, this.password);
+};
+
 export default User;

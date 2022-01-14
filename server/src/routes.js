@@ -13,8 +13,8 @@ router.post("/user/login", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY), a
     },
   } = ctx;
 
-  const user = await User.findOne({ where: { username, password, isSuperuser: false } });
-  if (user) {
+  const user = await User.findOne({ where: { username } });
+  if (await user?.isValidPassword(password)) {
     ctx.body = { message: "you have logged in successfully" };
   } else {
     ctx.notFound({ errors: ["user with this username and password does not exist"] });
