@@ -11,6 +11,8 @@ const config = {
     PASSWORD: getEnvVariable("DB_PASSWORD", ""),
     USERNAME: getEnvVariable("DB_USERNAME", "postgres"),
   },
+  JWT_SECRET_KEY: getEnvVariable("JWT_SECRET_KEY"),
+  TOKEN_EXPIRATION_TIME: getEnvVariable("TOKEN_EXPIRATION_TIME", "1d"),
 };
 
 export default new Proxy(config, {
