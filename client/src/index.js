@@ -4,11 +4,11 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Notes from './Pages/Notes';
-import Note from './Pages/Note';
+import NoteList from './Pages/NoteList';
+import NoteDetail from './Pages/NoteDetail';
 import Login from './Pages/Auth/Login';
 import SignUp from './Pages/Auth/SignUp';
-import CreateNotes from './Pages/CreateNotes';
+import CreateNote from './Pages/CreateNote';
 import NotFound from './Pages/NotFound';
 
 ReactDOM.render(
@@ -16,9 +16,9 @@ ReactDOM.render(
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
-        <Route path="notes" element={<Notes />} />
-        <Route path="new" element={<CreateNotes />} />
-        <Route path="notes/:noteId" element={<Note />} />
+        <Route path="notes" element={<NoteList />} />
+        <Route path="notes/new" element={<CreateNote />} />
+        <Route path="notes/:noteId" element={<NoteDetail />} />
         <Route path="login" element={<Login />} />
         <Route path="signup" element={<SignUp />} />
         <Route path="*" element={<NotFound />}/>
