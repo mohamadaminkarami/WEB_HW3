@@ -1,7 +1,7 @@
 import React from "react";
 
-function CreateNotes() {
+function CreateNote() {
   return <div>Add Notes!</div>;
 }
 
-export default CreateNotes;
+export default CreateNote;
