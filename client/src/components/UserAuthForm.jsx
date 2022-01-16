@@ -1,5 +1,5 @@
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { Button, Container, Grid } from "@mui/material";
+import { Button, Container, FormHelperText, Grid } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -11,6 +11,8 @@ function UserAuthForm() {
   const [state, setState] = React.useState({
     username: "",
     password: "",
+    usernameError: false,
+    passwordError: false,
     showPassword: false,
   });
 
@@ -27,7 +29,20 @@ function UserAuthForm() {
 
   const handleMouseDownPassword = event => {
     event.preventDefault();
-    console.log("hey!");
+  };
+
+  const submitForm = event => {
+    event.preventDefault();
+    setState({ ...state, usernameError: false, passwordError: false });
+    if (state.username.length < 8) {
+      setState({ ...state, usernameError: true });
+      return;
+    }
+    if (state.password === "") {
+      setState({ ...state, passwordError: true });
+      return;
+    }
+    console.log(state.username, state.password);
   };
 
   return (
@@ -37,7 +52,11 @@ function UserAuthForm() {
           <Grid item xs={12}>
             <legend>Enter your username and password</legend>
           </Grid>
-          <FormControl fullWidth sx={{ m: 1, ml: 0 }}>
+          <FormControl
+            error={state.usernameError}
+            fullWidth
+            sx={{ m: 1, ml: 0 }}
+          >
             <InputLabel htmlFor="username-input">Username</InputLabel>
             <OutlinedInput
               id="username-input"
@@ -47,8 +66,15 @@ function UserAuthForm() {
               fullWidth
               label="Username"
             />
+            <FormHelperText id="username-helper-text">
+              {state.usernameError && "At least 8 characters required."}
+            </FormHelperText>
           </FormControl>
-          <FormControl fullWidth sx={{ m: 1, ml: 0 }}>
+          <FormControl
+            error={state.passwordError}
+            fullWidth
+            sx={{ m: 1, ml: 0 }}
+          >
             <InputLabel htmlFor="outlined-adornment-password">
               Password
             </InputLabel>
@@ -73,15 +99,15 @@ function UserAuthForm() {
               }
               label="Password"
             />
+            <FormHelperText id="username-helper-text">
+              {state.passwordError && "Shouldn't be empty."}
+            </FormHelperText>
           </FormControl>
           <Button
             type="submit"
             color="primary"
             variant="contained"
-            onClick={e => {
-              e.preventDefault();
-              console.log(state.username, state.password);
-            }}
+            onClick={submitForm}
           >
             Sign in
           </Button>
