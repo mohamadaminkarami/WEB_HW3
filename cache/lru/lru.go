@@ -55,8 +55,7 @@ func (cache *Cache) Put(key string, value string) {
 	cache.elements[key] = pointer
 }
 
-func (cache *Cache) Purge() {
-	cache.capacity = 0
-	cache.elements = nil
-	cache.list = nil
+func (cache *Cache) Clear() {
+	cache.list = new(list.List)
+	cache.elements = make(map[string]*list.Element, cache.capacity)
 }
