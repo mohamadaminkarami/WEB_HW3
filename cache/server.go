@@ -39,6 +39,14 @@ func (s *server) GetKey(_ context.Context, in *pb.GetKeyRequest) (*pb.GetKeyRepl
 
 func (s *server) SetKey(_ context.Context, in *pb.SetKeyRequest) (*pb.SetKeyReply, error) {
 	log.Printf("Set Key: %s -> %s", in.Key, in.Value)
+
+	if len(in.Key) > 64 {
+		return &pb.SetKeyReply{}, status.Error(400, "key should be less than 64 character.")
+	}
+	if len(in.Value) > 2048 {
+		return &pb.SetKeyReply{}, status.Error(400, "Value should be less than 1024 character.")
+	}
+
 	cache.Put(in.Key, in.Value)
 	return &pb.SetKeyReply{}, nil
 }
