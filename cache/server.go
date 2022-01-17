@@ -1,22 +1,27 @@
 package main
 
 import (
+	pb "cache/grpc"
+	"cache/lru"
+	"cache/utils"
 	"context"
 	"flag"
 	"fmt"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
-
-	pb "cache/grpc"
-	"cache/lru"
-	"google.golang.org/grpc"
+	"strconv"
 )
 
-var cache = lru.New(10)
+var capacity, _ = strconv.Atoi(utils.GetEnv("cache_capacity", "100"))
+var cache = lru.New(capacity)
 
 var (
-	port = flag.Int("port", 50051, "The server port")
+	port = flag.String(
+		"port",
+		utils.GetEnv("grpc_port", "50051"),
+		"The server port")
 )
 
 type server struct {
@@ -46,7 +51,7 @@ func (s *server) Clear(_ context.Context, _ *pb.ClearRequest) (*pb.ClearReply, e
 
 func main() {
 	flag.Parse()
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
+	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
