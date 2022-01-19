@@ -19,10 +19,12 @@ export default {
 
       title: {
         type: Sequelize.STRING(256),
+        allowNull: false,
       },
 
       detail: {
         type: Sequelize.STRING(512),
+        allowNull: false,
       },
 
       createdAt: {

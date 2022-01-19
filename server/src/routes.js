@@ -6,6 +6,7 @@ import { NOTE_POST_REQUEST_SCHEMA, NOTE_PUT_REQUEST_SCHEMA, USER_REGISTER_AND_LO
 import createJwtToken from "./utils/create-jwt-token";
 import isAuthenticated from "./validators/is-authenticated";
 import hasPermission from "./validators/has-permission";
+import RESPONSE_CODE from "./utils/response-codes";
 
 const router = new Router();
 
@@ -17,10 +18,11 @@ router.post("/user/login", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY), a
   } = ctx;
 
   const user = await User.findOne({ where: { username } });
+
   if (await user?.isValidPassword(password)) {
     ctx.body = { message: "you have logged in successfully", token: createJwtToken(user) };
   } else {
-    ctx.notFound({ errors: ["user with this username and password does not exist"] });
+    ctx.unauthorized({ errors: ["Username and password does not match!"] });
   }
 });
 
@@ -30,11 +32,13 @@ router.post("/user/register", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY)
       body: { username, password },
     },
   } = ctx;
-  try {
-    const newUser = await User.create({ username, password, isSuperuser: true });
+
+  const user = await User.findOne({ where: { username } });
+  if (user) {
+    ctx.send(RESPONSE_CODE.CONFLICT, { errors: ["username has been already taken!"] });
+  } else {
+    const newUser = await User.create({ username, password, isSuperuser: false });
     ctx.body = { message: "user has been created successfully", token: createJwtToken(newUser) };
-  } catch (error) {
-    ctx.badRequest({ errors: error.errors.map((err) => err.message) });
   }
 });
 
@@ -42,21 +46,25 @@ router.get("/notes", isAuthenticated(), async (ctx) => {
   const {
     user: { userId },
   } = ctx;
+
   ctx.body = await Note.findAll({ where: { authorId: userId } });
 });
 
 router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {
-  const { noteId, user } = ctx.params;
+  const {
+    params: { noteId },
+    user,
+  } = ctx;
   // TODO implement caching
   const note = await Note.findByPk(noteId);
   if (note) {
     if (hasPermission(user, note)) {
       ctx.body = note;
     } else {
-      ctx.forbidden({ message: "you have no permission" });
+      ctx.forbidden({ errors: ["you have no permission to access data!"] });
     }
   } else {
-    ctx.notFound({ message: `note with id ${noteId} not found!` });
+    ctx.notFound({ errors: [`note with id ${noteId} not found!`] });
   }
 });
 
@@ -68,17 +76,13 @@ router.post("/notes/new", isAuthenticated(), validateBody(NOTE_POST_REQUEST_SCHE
     },
   } = ctx;
   const newNote = await Note.create({ title, detail, authorId: userId });
-  if (newNote) {
-    ctx.body = newNote;
-  } else {
-    ctx.body = "oops";
-  }
+  ctx.created(newNote);
 });
 
 router.put("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), validateBody(NOTE_PUT_REQUEST_SCHEMA), async (ctx) => {
   const {
     params: { noteId },
-    user: { userId },
+    user,
     request: {
       body: { title, detail },
     },
@@ -90,26 +94,36 @@ router.put("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), validate
   if (detail) {
     updatedValues.detail = detail;
   }
-  const [isUpdate, updatedNote] = await Note.update(updatedValues, { where: { id: noteId, authorId: userId }, returning: true });
+  const whereClause = { id: noteId };
+  if (!user.isSuperuser) {
+    whereClause.authorId = user.userId;
+  }
+
+  // TODO update in cache
+  const [isUpdate, updatedNote] = await Note.update(updatedValues, { where: { ...whereClause }, returning: true });
   if (isUpdate) {
-    ctx.body = updatedNote;
+    [ctx.body] = updatedNote;
   } else {
-    ctx.notFound({ message: `note with id ${noteId} not found!` });
-    ctx.body = "hi";
+    ctx.notFound({ errors: [`note with id ${noteId} not found!`] });
   }
 });
 
 router.delete("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {
   const {
-    noteId,
-    user: { userId },
-  } = ctx.params;
+    params: { noteId },
+    user,
+  } = ctx;
   // TODO delete from cache
-  const isDeleted = await Note.destroy({ where: { id: noteId, authorId: userId } });
+
+  const whereClause = { id: noteId };
+  if (!user.isSuperuser) {
+    whereClause.authorId = user.userId;
+  }
+  const isDeleted = await Note.destroy({ where: { ...whereClause } });
   if (isDeleted) {
-    ctx.ok({ message: `note with id ${noteId} deleted` });
+    ctx.noContent();
   } else {
-    ctx.notFound({ message: `note with id ${noteId} not found!` });
+    ctx.notFound({ errors: [`note with id ${noteId} not found!`] });
   }
 });
 
