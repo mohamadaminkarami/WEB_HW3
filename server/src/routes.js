@@ -22,7 +22,7 @@ router.post("/user/login", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY), a
   if (await user?.isValidPassword(password)) {
     ctx.body = { message: "you have logged in successfully", token: createJwtToken(user) };
   } else {
-    ctx.unauthorized({ errors: ["Username and password does not match!"] });
+    ctx.unauthorized({ errors: ["username and password does not match!"] });
   }
 });
 
