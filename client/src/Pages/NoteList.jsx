@@ -22,7 +22,7 @@ function NoteList() {
   ];
 
   const renderedNotes = noteList.map(note => {
-    return <NoteCard note={note} />;
+    return <NoteCard note={note} key={note.id} />;
   });
 
   return <Container>{renderedNotes}</Container>;

@@ -1,7 +1,12 @@
 import React from "react";
+import AddNote from "../components/AddNote";
 
 function CreateNote() {
-  return <div>Add Notes!</div>;
+  return (
+    <div>
+      <AddNote />
+    </div>
+  );
 }
 
 export default CreateNote;
