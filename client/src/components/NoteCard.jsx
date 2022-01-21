@@ -18,8 +18,6 @@ function NoteCard(props) {
     },
   });
   const classes = useStyles();
-
-  console.log(useStyles);
   const { id, title, detail } = props.note;
   return (
     <Card sx={{ minWidth: 275, m: 1 }}>
