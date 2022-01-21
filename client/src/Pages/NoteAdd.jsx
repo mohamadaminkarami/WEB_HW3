@@ -8,7 +8,7 @@ import {
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useUserActions } from "../services/requests";
 
 function NoteAdd() {
@@ -24,6 +24,11 @@ function NoteAdd() {
     setState({ ...state, [prop]: event.target.value });
   };
 
+  const createNote =  useCallback(async (title, detail) => {
+    const response = await userActions.addNote(title, detail);
+    console.log(response);
+  }, []);
+
   const addNote = event => {
     event.preventDefault();
     setState({ ...state, titleError: false, detailError: false });
@@ -36,7 +41,7 @@ function NoteAdd() {
       return;
     }
     console.log({ title: state.title, detail: state.detail });
-    userActions.addNote(state.title, state.detail);
+    createNote(state.title, state.detail);
   };
 
   return (
