@@ -7,6 +7,7 @@ export default function validateNoteIdParams() {
       ctx.badRequest({ errors: ["note id must be a number"] });
       return;
     }
+    ctx.params.noteId = parseInt(noteId, 10);
     await next();
   };
 }

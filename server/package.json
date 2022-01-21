@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "nodemon --experimental-specifier-resolution=node src/index",
     "start": "node --experimental-specifier-resolution=node src/index",
+    "createsuperuser": "node --experimental-specifier-resolution=node src/utils/create-superuser",
     "format": "prettier --write \"src/**/*\"",
     "lint": "eslint \"src/**/*\"",
     "migrate": "sequelize-cli db:migrate"
@@ -23,6 +24,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-import": "^2.25.4",
     "eslint-plugin-prettier": "^4.0.0",
+    "inquirer": "^8.2.0",
     "nodemon": "^2.0.15",
     "prettier": "^2.5.1",
     "sequelize-cli": "^6.3.0"

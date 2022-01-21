@@ -16,6 +16,6 @@ export default function isAuthenticated() {
       ctx.unauthorized({ errors: ["Invalid Token"] });
       return;
     }
-    next();
+    await next();
   };
 }
