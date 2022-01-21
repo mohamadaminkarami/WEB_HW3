@@ -1,26 +1,29 @@
-import { useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import API from "./api";
 import { authAtom } from "./auth";
 
 export { useUserActions };
 
-function authHeader() {
-    const token = "";
-    const isLoggedIn = !!token;
-    if (isLoggedIn) {
-        return { Authorization: `${token}` };
-    } else {
-        return {};
-    }
-}
-
-async function useUserActions() {
-    const setAuth = useSetRecoilState(authAtom);
+function useUserActions() {
+    const [auth, setAuth] = useRecoilState(authAtom);
 
     return {
         signUp,
         login,
         logout,
+        getAllNotes,
+        getNote,
+        addNote,
+    }
+
+    function authHeader() {
+        const token = auth;
+        const isLoggedIn = !!token;
+        if (isLoggedIn) {
+            return { Authorization: `${token}` };
+        } else {
+            return {};
+        }
     }
 
     async function signUp(username, password) {
@@ -32,6 +35,9 @@ async function useUserActions() {
                 username: username,
                 password: password
             }, config);
+            const token = response.data.token;
+            setAuth(token);
+            console.log(token);
             return response;
         } catch (error) {
             return error.response;
@@ -61,6 +67,45 @@ async function useUserActions() {
         localStorage.removeItem('user');
         setAuth(null);
         // history.push('/login');
+    }
+
+    async function getAllNotes() {
+        const config = {
+            headers: authHeader()
+        }
+        try {
+            const response = await API.get('/notes/', config);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async function getNote(id) {
+        const config = {
+            headers: authHeader()
+        }
+        try {
+            const response = await API.get(`/notes/${id}`, config);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async function addNote(title, detail) {
+        const config = {
+            headers: authHeader()
+        }
+        try {
+            const response = await API.post(`/notes/new/`,{
+                title: title,
+                detail: detail
+            }, config);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
     }
 }
 

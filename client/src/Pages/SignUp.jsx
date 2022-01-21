@@ -8,7 +8,7 @@ function SignUp() {
   const handleSignUp = useCallback(
     async (username, password) => {
       console.log(username, password);
-      const response = (await userActions).signUp(username, password);
+      const response = await userActions.signUp(username, password);
       console.log(response);
     },
     [userActions]

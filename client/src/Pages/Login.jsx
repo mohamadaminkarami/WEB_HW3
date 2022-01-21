@@ -8,7 +8,7 @@ function Login() {
   const handleLogin = useCallback(
     async (username, password) => {
       console.log(username, password);
-      const response = (await userActions).login(username, password);
+      const response = await userActions.login(username, password);
       console.log(response);
     },
     [userActions]

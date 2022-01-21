@@ -1,16 +1,18 @@
 import {
-    Button,
-    Container,
-    FormHelperText,
-    Grid,
-    TextField
+  Button,
+  Container,
+  FormHelperText,
+  Grid,
+  TextField,
 } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import React, { useState } from "react";
+import { useUserActions } from "../services/requests";
 
-function AddNote() {
+function NoteAdd() {
+  const userActions = useUserActions();
   const [state, setState] = useState({
     title: "",
     detail: "",
@@ -34,6 +36,7 @@ function AddNote() {
       return;
     }
     console.log({ title: state.title, detail: state.detail });
+    userActions.addNote(state.title, state.detail);
   };
 
   return (
@@ -84,4 +87,4 @@ function AddNote() {
   );
 }
 
-export default AddNote;
+export default NoteAdd;

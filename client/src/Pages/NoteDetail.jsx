@@ -9,19 +9,26 @@ import CardContent from "@mui/material/CardContent";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Typography from "@mui/material/Typography";
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import EditNote from "../components/EditNote";
+import { useUserActions } from "../services/requests";
 
 function NoteDetail() {
+  const params = useParams();
   const [editOpen, setEditOpen] = useState(false);
-  // fetch data with id
-  const [note, setNote] = useState({
-    id: 1,
-    title: "Hi",
-    detail: "My name is chicky, chicky slim shady!",
-  });
+  const [note, setNote] = useState({});
+  const userActions = useUserActions();
 
-  console.log("rendere");
+  const fetchData = useCallback(async () => {
+    const note = await userActions.getNote(params.noteId);
+    if (note) setNote(note);
+  }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
+  console.log(note);
 
   const handleOpen = () => {
     setEditOpen(true);

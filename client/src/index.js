@@ -8,7 +8,7 @@ import NoteList from './Pages/NoteList';
 import NoteDetail from './Pages/NoteDetail';
 import Login from './Pages/Login';
 import SignUp from './Pages/SignUp';
-import CreateNote from './Pages/CreateNote';
+import NoteAdd from './Pages/NoteAdd';
 import NotFound from './Pages/NotFound';
 import { RecoilRoot } from 'recoil';
 
@@ -19,7 +19,7 @@ ReactDOM.render(
         <Routes>
           <Route path="/" element={<App />} />
           <Route path="notes" element={<NoteList />} />
-          <Route path="notes/new" element={<CreateNote />} />
+          <Route path="notes/new" element={<NoteAdd />} />
           <Route path="notes/:noteId" element={<NoteDetail />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
