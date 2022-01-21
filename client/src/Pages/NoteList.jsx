@@ -18,7 +18,7 @@ function NoteList() {
   console.log(notes);
 
   const renderedNotes = notes.map(note => {
-    return <NoteCard note={note} key={note.id} />;
+    return <NoteCard note={note} key={note.id} short={true}/>;
   });
 
   return <Container>{renderedNotes}</Container>;

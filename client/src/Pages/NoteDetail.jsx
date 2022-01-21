@@ -38,9 +38,24 @@ function NoteDetail() {
     setEditOpen(false);
   };
 
-  const handleEditNote = newNote => {
+  const editNote = useCallback(async (id, title, detail) => {
+    const response = await userActions.editNote(id, title, detail);
+    console.log(response);
+  }, []);
+
+  const handleEdit = newNote => {
+    editNote(params.noteId, newNote.title, newNote.detail);
     setEditOpen(false);
     setNote(newNote);
+  };
+
+  const deleteNote = useCallback(async id => {
+    const response = await userActions.deleteNote(id);
+    console.log(response);
+  }, []);
+
+  const handleDelete = () => {
+    deleteNote(params.noteId);
   };
 
   return (
@@ -62,7 +77,12 @@ function NoteDetail() {
           >
             Edit
           </Button>
-          <Button variant="outlined" color="error" startIcon={<DeleteIcon />}>
+          <Button
+            variant="outlined"
+            color="error"
+            startIcon={<DeleteIcon />}
+            onClick={handleDelete}
+          >
             Delete
           </Button>
         </CardActions>
@@ -81,7 +101,7 @@ function NoteDetail() {
           </Grid>
         </DialogTitle>
         <DialogContent>
-          <EditNote note={note} handleEdit={handleEditNote} />
+          <EditNote note={note} handleEdit={handleEdit} />
         </DialogContent>
       </Dialog>
     </Container>

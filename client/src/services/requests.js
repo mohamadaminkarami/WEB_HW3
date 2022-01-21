@@ -14,6 +14,8 @@ function useUserActions() {
         getAllNotes,
         getNote,
         addNote,
+        deleteNote,
+        editNote,
     }
 
     function authHeader() {
@@ -99,6 +101,33 @@ function useUserActions() {
         }
         try {
             const response = await API.post(`/notes/new/`,{
+                title: title,
+                detail: detail
+            }, config);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async function deleteNote(id) {
+        const config = {
+            headers: authHeader()
+        }
+        try {
+            const response = await API.delete(`/notes/${id}`, config);
+            return response.data;
+        } catch (error) {
+            return error.response;
+        }
+    }
+
+    async function editNote(id, title, detail) {
+        const config = {
+            headers: authHeader()
+        }
+        try {
+            const response = await API.put(`/notes/${id}`,{
                 title: title,
                 detail: detail
             }, config);
