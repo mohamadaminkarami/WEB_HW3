@@ -6,10 +6,9 @@ import InputAdornment from "@mui/material/InputAdornment";
 import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import React from "react";
+import { Link } from "react-router-dom";
 
-
-function UserAuthForm({ buttonText, handleSubmit }) {
-
+function UserAuthForm({ mode, handleSubmit }) {
   const [state, setState] = React.useState({
     username: "",
     password: "",
@@ -106,14 +105,31 @@ function UserAuthForm({ buttonText, handleSubmit }) {
               {state.passwordError && "Shouldn't be empty."}
             </FormHelperText>
           </FormControl>
-          <Button
-            type="submit"
-            color="primary"
-            variant="contained"
-            onClick={submitForm}
+          <Grid
+            container
+            direction="column"
+            justifyContent="space-between"
+            alignItems="flex-start"
+            spacing={2}
           >
-            {buttonText || "Sign in"}
-          </Button>
+            <Grid item xs={12}>
+              <Button
+                type="submit"
+                color="primary"
+                variant="contained"
+                onClick={submitForm}
+              >
+                {mode === "login" ? "Sign in" : "sign up"}
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              {mode === "login" ? (
+                <Link to="../signup">Don't have an Account? Click here.</Link>
+              ) : (
+                <Link to="../login">Already have an Account? Click Here.</Link>
+              )}
+            </Grid>
+          </Grid>
         </form>
       </Grid>
     </Container>

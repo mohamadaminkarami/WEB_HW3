@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import API from "./api";
 import { authAtom } from "./auth";
@@ -5,6 +6,7 @@ import { authAtom } from "./auth";
 export { useUserActions };
 
 function useUserActions() {
+    const navigate = useNavigate();
     const [auth, setAuth] = useRecoilState(authAtom);
 
     return {
@@ -68,6 +70,7 @@ function useUserActions() {
     function logout() {
         localStorage.removeItem('token');
         setAuth(null);
+        navigate('/login');
     }
 
     async function getAllNotes() {
@@ -99,7 +102,7 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.post(`/notes/new/`,{
+            const response = await API.post(`/notes/new/`, {
                 title: title,
                 detail: detail
             }, config);
@@ -126,7 +129,7 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.put(`/notes/${id}`,{
+            const response = await API.put(`/notes/${id}`, {
                 title: title,
                 detail: detail
             }, config);
@@ -134,6 +137,10 @@ function useUserActions() {
         } catch (error) {
             return error.response;
         }
+    }
+
+    function jumpTo(address) {
+
     }
 }
 

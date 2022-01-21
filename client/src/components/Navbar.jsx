@@ -1,24 +1,23 @@
-import * as React from "react";
+import { LoginOutlined } from "@mui/icons-material";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Grid } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
-import logo from "./../logo.svg";
-import "./../App.css";
-import { Grid } from "@mui/material";
-import { authAtom } from "../services/auth";
-import LogoutIcon from "@mui/icons-material/Logout";
-import { LoginOutlined } from "@mui/icons-material";
-import { useUserActions } from "../services/requests";
-import { useRecoilValue } from "recoil";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import * as React from "react";
 import { Link } from "react-router-dom";
+import { useRecoilValue } from "recoil";
+import { authAtom } from "../services/auth";
+import { useUserActions } from "../services/requests";
+import "./../App.css";
+import logo from "./../logo.svg";
 
 export default function Navbar() {
   const auth = useRecoilValue(authAtom);
   const userActions = useUserActions();
-  const handleLogout = event => {
+  const handleLogout = () => {
     userActions.logout();
   };
 

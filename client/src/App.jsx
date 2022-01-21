@@ -3,7 +3,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import "./index.css";
-import logo from "./logo.svg";
 import Login from "./Pages/Login";
 import NoteAdd from "./Pages/NoteAdd";
 import NoteDetail from "./Pages/NoteDetail";
@@ -13,7 +12,7 @@ import SignUp from "./Pages/SignUp";
 
 function App() {
   return (
-    <div className="App">
+    <div>
       <BrowserRouter>
         <Navbar />
         <Routes>
