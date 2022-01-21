@@ -13,6 +13,8 @@ const config = {
   },
   JWT_SECRET_KEY: getEnvVariable("JWT_SECRET_KEY"),
   TOKEN_EXPIRATION_TIME: getEnvVariable("TOKEN_EXPIRATION_TIME", "1d"),
+  CACHE_TARGET: getEnvVariable("CACHE_TARGET", "localhost:50051"),
+  MAXIMUM_REQUEST_PER_MINUTES: parseInt(getEnvVariable("MAXIMUM_REQUEST_PER_MINUTES", 10), 10),
 };
 
 export default new Proxy(config, {
