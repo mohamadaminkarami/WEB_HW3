@@ -7,7 +7,9 @@ import InputLabel from "@mui/material/InputLabel";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import React from "react";
 
-function UserAuthForm() {
+
+function UserAuthForm({ buttonText, handleSubmit }) {
+
   const [state, setState] = React.useState({
     username: "",
     password: "",
@@ -43,6 +45,7 @@ function UserAuthForm() {
       return;
     }
     console.log(state.username, state.password);
+    handleSubmit(state.username, state.password);
   };
 
   return (
@@ -109,7 +112,7 @@ function UserAuthForm() {
             variant="contained"
             onClick={submitForm}
           >
-            Sign in
+            {buttonText || "Sign in"}
           </Button>
         </form>
       </Grid>
