@@ -20,6 +20,11 @@ function useUserActions() {
         editNote,
     }
 
+    function setToken(token) {
+        setAuth(token);
+        localStorage.setItem('token', JSON.stringify(token));
+    }
+
     function authHeader() {
         const token = auth;
         const isLoggedIn = !!token;
@@ -40,14 +45,13 @@ function useUserActions() {
                 password: password
             }, config);
             const token = response.data.token;
-            setAuth(token);
-            console.log(token);
+            setToken(token);
             return response;
         } catch (error) {
             return error.response;
         }
     }
-    
+
     async function login(username, password) {
         const config = {
             headers: authHeader()
@@ -58,9 +62,7 @@ function useUserActions() {
                 password: password
             }, config);
             const token = response.data.token;
-            setAuth(token);
-            console.log(token);
-            localStorage.setItem('token', JSON.stringify(token));
+            setToken(token);
             return response;
         } catch (error) {
             return error.response;
