@@ -1,6 +1,6 @@
 import React, { useCallback } from "react";
-import UserAuthForm from "../../components/UserAuthForm";
-import { useUserActions } from "../../services/requests";
+import UserAuthForm from "../components/UserAuthForm";
+import { useUserActions } from "../services/requests";
 
 function SignUp() {
   const userActions = useUserActions();
