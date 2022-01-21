@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import { makeStyles } from "@mui/styles";
 import React from "react";
 import { Link } from "react-router-dom";
+import "./../App.css";
 
 function NoteCard(props) {
   const useStyles = makeStyles({

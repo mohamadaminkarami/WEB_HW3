@@ -66,9 +66,8 @@ function useUserActions() {
     }
 
     function logout() {
-        localStorage.removeItem('user');
+        localStorage.removeItem('token');
         setAuth(null);
-        // history.push('/login');
     }
 
     async function getAllNotes() {

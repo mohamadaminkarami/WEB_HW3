@@ -1,31 +1,14 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import NoteList from './Pages/NoteList';
-import NoteDetail from './Pages/NoteDetail';
-import Login from './Pages/Login';
-import SignUp from './Pages/SignUp';
-import NoteAdd from './Pages/NoteAdd';
-import NotFound from './Pages/NotFound';
 import { RecoilRoot } from 'recoil';
+import App from './App';
+import './index.css';
+import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
   <React.StrictMode>
     <RecoilRoot>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="notes" element={<NoteList />} />
-          <Route path="notes/new" element={<NoteAdd />} />
-          <Route path="notes/:noteId" element={<NoteDetail />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <App />
     </RecoilRoot>
   </React.StrictMode>,
   document.getElementById('root')
