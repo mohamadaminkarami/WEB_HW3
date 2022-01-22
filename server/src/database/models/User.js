@@ -2,7 +2,11 @@ import { DataTypes, Model } from "sequelize";
 import bcrypt from "bcrypt";
 import sequelize from "../../utils/sequelize";
 
-class User extends Model {}
+class User extends Model {
+  async isValidPassword(password) {
+    return bcrypt.compare(password, this.password);
+  }
+}
 
 User.init(
   {
@@ -21,13 +25,14 @@ User.init(
       defaultValue: false,
     },
   },
-  { sequelize }
+  {
+    sequelize,
+    hooks: {
+      async beforeCreate(user) {
+        user.password = await bcrypt.hash(user.password, 10);
+      },
+    },
+  }
 );
-User.beforeCreate(async (user) => {
-  user.password = await bcrypt.hash(user.password, 10);
-});
-User.prototype.isValidPassword = async function (password) {
-  return bcrypt.compare(password, this.password);
-};
 
 export default User;

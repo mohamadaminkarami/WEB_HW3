@@ -1,0 +1,6 @@
+const RESPONSE_CODE = {
+  CONFLICT: 409,
+  TOO_MANY_REQUESTS: 429,
+};
+
+export default RESPONSE_CODE;

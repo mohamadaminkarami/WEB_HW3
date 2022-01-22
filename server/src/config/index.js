@@ -2,7 +2,7 @@ import getEnvVariable from "../utils/get-env-variable";
 
 const config = {
   ENVIRONMENT: getEnvVariable("NODE_ENV", "DEVELOPMENT"),
-  PORT: getEnvVariable("PORT", 3000),
+  PORT: getEnvVariable("PORT", 3030),
   DATABASE: {
     NAME: getEnvVariable("DB_NAME", "webhw3"),
     DIALECT: getEnvVariable("DB_DIALECT", "postgres"),
@@ -11,8 +11,14 @@ const config = {
     PASSWORD: getEnvVariable("DB_PASSWORD", ""),
     USERNAME: getEnvVariable("DB_USERNAME", "postgres"),
   },
+  REDIS: {
+    PORT: getEnvVariable("REDIS_PORT", 6379),
+    HOST: getEnvVariable("REDIS_HOST", "localhost"),
+  },
   JWT_SECRET_KEY: getEnvVariable("JWT_SECRET_KEY"),
   TOKEN_EXPIRATION_TIME: getEnvVariable("TOKEN_EXPIRATION_TIME", "1d"),
+  CACHE_TARGET: getEnvVariable("CACHE_TARGET", "localhost:50051"),
+  MAXIMUM_REQUEST_PER_MINUTE: parseInt(getEnvVariable("MAXIMUM_REQUEST_PER_MINUTE", 10), 10),
 };
 
 export default new Proxy(config, {
