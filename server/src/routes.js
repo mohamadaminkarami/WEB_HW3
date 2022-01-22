@@ -22,7 +22,7 @@ router.post("/user/login", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY), a
   if (await user?.isValidPassword(password)) {
     ctx.body = { message: "you have logged in successfully", token: createJwtToken(user) };
   } else {
-    ctx.unauthorized({ errors: ["Username and password does not match!"] });
+    ctx.unauthorized({ errors: ["username and password does not match!"] });
   }
 });
 
@@ -43,11 +43,11 @@ router.post("/user/register", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY)
 });
 
 router.get("/notes", isAuthenticated(), async (ctx) => {
-  const {
-    user: { userId },
-  } = ctx;
+  const { user } = ctx;
 
-  ctx.body = await Note.findAll({ where: { authorId: userId } });
+  const whereClause = user.isSuperuser ? {} : { where: { authorId: user.userId } };
+
+  ctx.body = await Note.findAll(whereClause);
 });
 
 router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {
@@ -55,7 +55,6 @@ router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (c
     params: { noteId },
     user,
   } = ctx;
-  // TODO implement caching
   const note = await Note.findByPk(noteId);
   if (note) {
     if (hasPermission(user, note)) {
