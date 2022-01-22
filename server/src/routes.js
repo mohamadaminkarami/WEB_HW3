@@ -55,7 +55,6 @@ router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (c
     params: { noteId },
     user,
   } = ctx;
-  // TODO implement caching
   const note = await Note.findByPk(noteId);
   if (note) {
     if (hasPermission(user, note)) {

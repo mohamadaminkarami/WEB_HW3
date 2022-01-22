@@ -6,7 +6,6 @@ class User extends Model {
   async isValidPassword(password) {
     return bcrypt.compare(password, this.password);
   }
-
 }
 
 User.init(
