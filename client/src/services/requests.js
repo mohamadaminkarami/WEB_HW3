@@ -103,11 +103,10 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.post(`/notes/new/`, {
+            return await API.post(`/notes/new/`, {
                 title: title,
                 detail: detail
             }, config);
-            return response.data;
         } catch (error) {
             return error.response;
         }
