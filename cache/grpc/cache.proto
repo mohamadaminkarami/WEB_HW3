@@ -35,3 +35,9 @@ message SetKeyReply {}
 message ClearRequest {}
 
 message ClearReply {}
+
+message RemoveKeyRequest {
+  string key = 1;
+}
+
+message RemoveKeyReply {}

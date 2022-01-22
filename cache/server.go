@@ -57,6 +57,12 @@ func (s *server) Clear(_ context.Context, _ *pb.ClearRequest) (*pb.ClearReply, e
 	return &pb.ClearReply{}, nil
 }
 
+func (s *server) Remove(_ context.Context, in *pb.RemoveKeyRequest) (*pb.RemoveKeyReply, error) {
+	log.Printf("Remove Key: %s", in.Key)
+	cache.Remove(in.Key)
+	return &pb.RemoveKeyReply{}, nil
+}
+
 func main() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", *port))
