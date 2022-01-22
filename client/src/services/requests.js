@@ -69,10 +69,11 @@ function useUserActions() {
         }
     }
 
-    function logout() {
+    function logout({ redirect = true }) {
         localStorage.removeItem('token');
         setAuth(null);
-        navigate('/login');
+        if (redirect)
+            navigate('/login');
     }
 
     async function getAllNotes() {
@@ -80,8 +81,7 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.get('/notes/', config);
-            return response;
+            return await API.get('/notes/', config);
         } catch (error) {
             return error.response;
         }
@@ -92,8 +92,7 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.get(`/notes/${id}`, config);
-            return response.data;
+            return await API.get(`/notes/${id}`, config);
         } catch (error) {
             return error.response;
         }

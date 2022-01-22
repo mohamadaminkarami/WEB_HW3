@@ -20,6 +20,7 @@ function NoteList() {
         setErrorState(oldState => ({ ...oldState, empty: true }));
       }
     } else {
+      userActions.logout({ redirect: false });
       setErrorState(oldState => ({ ...oldState, auth: true }));
     }
   }, []);
