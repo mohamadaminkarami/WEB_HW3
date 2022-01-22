@@ -69,7 +69,7 @@ function useUserActions() {
         }
     }
 
-    function logout({ redirect = true }) {
+    function logout({ redirect = true } = {}) {
         localStorage.removeItem('token');
         setAuth(null);
         if (redirect)
@@ -118,8 +118,7 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.delete(`/notes/${id}`, config);
-            return response.data;
+            return await API.delete(`/notes/${id}`, config);
         } catch (error) {
             return error.response;
         }
@@ -130,11 +129,10 @@ function useUserActions() {
             headers: authHeader()
         }
         try {
-            const response = await API.put(`/notes/${id}`, {
+            return await API.put(`/notes/${id}`, {
                 title: title,
                 detail: detail
             }, config);
-            return response.data;
         } catch (error) {
             return error.response;
         }

@@ -1,6 +1,6 @@
 import { Alert, Snackbar } from "@mui/material";
 import React, { useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import UserAuthForm from "../components/UserAuthForm";
 import { useUserActions } from "../services/requests";
 
