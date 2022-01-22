@@ -8,6 +8,7 @@ import (
 	"flag"
 	"fmt"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/status"
 	"log"
 	"net"
@@ -22,6 +23,8 @@ var (
 		"port",
 		utils.GetEnv("grpc_port", "50051"),
 		"The server port")
+	crt = "certs/cert.pem"
+	key = "certs/key.pem"
 )
 
 type server struct {
@@ -64,12 +67,13 @@ func (s *server) Remove(_ context.Context, in *pb.RemoveKeyRequest) (*pb.RemoveK
 }
 
 func main() {
+	transportCredentials, _ := credentials.NewServerTLSFromFile(crt, key)
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer()
+	s := grpc.NewServer(grpc.Creds(transportCredentials))
 	pb.RegisterCacheHandlerServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
