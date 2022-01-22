@@ -46,7 +46,7 @@ router.get("/notes", isAuthenticated(), async (ctx) => {
   const { user } = ctx;
   const whereClause = user.isSuperuser ? {} : { where: { authorId: user.userId } };
 
-  ctx.body = await Note.findAll({ whereClause, attributes: ["id","title", "detail"] });
+  ctx.body = await Note.findAll({ whereClause, attributes: ["id", "title", "detail"] });
 });
 
 router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {
@@ -97,7 +97,6 @@ router.put("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), validate
     whereClause.authorId = user.userId;
   }
 
-  // TODO update in cache
   const [isUpdate, updatedNote] = await Note.update(updatedValues, { where: { ...whereClause }, returning: true });
   if (isUpdate) {
     [ctx.body] = updatedNote;
@@ -111,7 +110,6 @@ router.delete("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async
     params: { noteId },
     user,
   } = ctx;
-  // TODO delete from cache
 
   const whereClause = { id: noteId };
   if (!user.isSuperuser) {

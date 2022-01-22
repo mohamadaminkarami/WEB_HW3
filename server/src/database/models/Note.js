@@ -26,7 +26,7 @@ class Note extends Model {
     const newNote = await super.create(data);
     console.log("create in database");
 
-    const key = `${this.CACHE_NAMESPACE}${newNote.noteId}`;
+    const key = `${this.CACHE_NAMESPACE}${newNote.id}`;
     await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(newNote) });
     console.log("create in cache");
 
@@ -37,7 +37,7 @@ class Note extends Model {
     const [isUpdate, updatedNote] = await super.update(updatedValues, query);
     if (isUpdate) {
       console.log("update in database");
-      const key = `${this.CACHE_NAMESPACE}${query.where.noteId}`;
+      const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
       await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNote) });
       console.log("update in cache");
     }
@@ -47,7 +47,7 @@ class Note extends Model {
   static async destroy(query) {
     const isDeleted = await super.destroy(query);
     if (isDeleted) {
-      const key = `${this.CACHE_NAMESPACE}${query.where.noteId}`;
+      const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
       console.log("delete from database");
       try {
         await cacheClient.clear().sendMessage({ key });
