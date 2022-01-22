@@ -9,7 +9,6 @@ class Note extends Model {
     const key = `${this.CACHE_NAMESPACE}${noteId}`;
     try {
       const cachedNote = await cacheClient.getKey().sendMessage({ key });
-      console.log("got from cache");
       return new Note(JSON.parse(cachedNote.value));
     } catch (errors) {
       console.log("got from database");
@@ -38,7 +37,7 @@ class Note extends Model {
     if (isUpdate) {
       console.log("update in database");
       const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
-      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNote) });
+      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNote[0]) });
       console.log("update in cache");
     }
     return [isUpdate, updatedNote];
