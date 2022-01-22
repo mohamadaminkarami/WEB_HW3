@@ -1,41 +1,6 @@
 version: "3.9"
 
 services:
-  # client:
-  #   build: ./client
-  #   ports:
-  #     - 8000:80
-  #   depends_on:
-  #     - server
-
-  server:
-    build: ./server
-    depends_on:
-      - redis
-      - database
-      # - cache
-    # deploy:
-    #   replicas: ${NODE_REPLICAS:-1}
-    #   resources:
-    #     limits:
-    #         cpus: ${NODE_CPUS:-0.125} 
-    #         memory: ${NODE_MEM:-100M}
-    #     reservations:
-    #       cpus: ${NODE_CPUS_RES:-0.125} 
-    #       memory: ${NODE_MEM_RES:-50M}
-
-  # cache:
-  #   build: ./cache
-  #   deploy:
-  #     replicas: ${GO_REPLICAS:-1}
-  #     resources:
-  #       limits:
-  #           cpus: ${GO_CPUS:-0.125} 
-  #           memory: ${GO_MEM:-100M}
-  #       reservations:
-  #         cpus: ${GO_CPUS_RES:-0.125} 
-  #         memory: ${GO_MEM_RES:-50M}
-
   redis:
     image: redis
     restart: always
@@ -49,4 +14,42 @@ services:
     image: postgres
     restart: always
     environment:
+      - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=1234
+      - APP_DB_NAME=webhw3
+
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d/
+    
+    ports:
+      - 5432:5432
+
+  # client:
+  #   build: ./client
+  #   ports:
+  #     - 8000:80
+  #   depends_on:
+  #     - server
+
+  server:
+    build: ./server
+    depends_on:
+      - redis
+      - database
+      # - cache
+    
+    command: su -c "yarn migrate && yarn start"
+
+
+  # cache:
+  #   build: ./cache
+  #   deploy:
+  #     replicas: ${GO_REPLICAS:-1}
+  #     resources:
+  #       limits:
+  #           cpus: ${GO_CPUS:-0.125} 
+  #           memory: ${GO_MEM:-100M}
+  #       reservations:
+  #         cpus: ${GO_CPUS_RES:-0.125} 
+  #         memory: ${GO_MEM_RES:-50M}
+
