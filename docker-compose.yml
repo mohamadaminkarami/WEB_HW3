@@ -24,12 +24,12 @@ services:
     ports:
       - 5432:5432
 
-  # client:
-  #   build: ./client
-  #   ports:
-  #     - 8000:80
-  #   depends_on:
-  #     - server
+  client:
+    build: ./client
+    ports:
+      - 8000:80
+    depends_on:
+      - server
 
   server:
     build: ./server
