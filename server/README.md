@@ -18,6 +18,9 @@ DB_PASSWORD= // example: "yourpassword"
 DB_USERNAME= // example: "mohamadamin"
 JWT_SECRET_KEY= // example: "secret"
 TOKEN_EXPIRATION_TIME= // example: "2d"
+MAXIMUM_REQUEST_PER_MINUTE= // example: 100
+REDIS_PORT= // example: 6379
+REDIS_HOST= // example: "localhost"
 
 ```
 
@@ -28,10 +31,12 @@ After cloning project, Run following commands:
 ```
 // using npm
 $ npm install
+$ npm migrate
 $ npm start
 
 // using yarn
 $ yarn install
+$ yarn migrate
 $ yarn start
 ```
 
@@ -42,10 +47,12 @@ After cloning project, Run following commands:
 ```
 // using npm
 $ npm install
+$ npm migrate
 $ npm dev
 
 // using yarn
 $ yarn install
+$ yarn migrate
 $ yarn dev
 ```
 
