@@ -22,7 +22,7 @@ router.post("/user/login", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY), a
   if (await user?.isValidPassword(password)) {
     ctx.body = { message: "you have logged in successfully", token: createJwtToken(user) };
   } else {
-    ctx.unauthorized({ errors: ["username and password does not match!"] });
+    ctx.unauthorized({ errors: ["username and password do not match!"] });
   }
 });
 
@@ -35,7 +35,7 @@ router.post("/user/register", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY)
 
   const user = await User.findOne({ where: { username } });
   if (user) {
-    ctx.send(RESPONSE_CODE.CONFLICT, { errors: ["username has been already taken!"] });
+    ctx.send(RESPONSE_CODE.CONFLICT, { errors: ["username has already been taken!"] });
   } else {
     const newUser = await User.create({ username, password, isSuperuser: false });
     ctx.body = { message: "user has been created successfully", token: createJwtToken(newUser) };
@@ -97,9 +97,9 @@ router.put("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), validate
     whereClause.authorId = user.userId;
   }
 
-  const [isUpdate, updatedNote] = await Note.update(updatedValues, { where: { ...whereClause }, returning: true });
+  const [isUpdate, updatedNotes] = await Note.update(updatedValues, { where: { ...whereClause }, returning: true });
   if (isUpdate) {
-    [ctx.body] = updatedNote;
+    [ctx.body] = updatedNotes;
   } else {
     ctx.notFound({ errors: [`note with id ${noteId} not found!`] });
   }

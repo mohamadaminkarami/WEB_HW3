@@ -26,8 +26,12 @@ class Note extends Model {
     console.log("create in database");
 
     const key = `${this.CACHE_NAMESPACE}${newNote.id}`;
-    await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(newNote) });
-    console.log("create in cache");
+    try {
+      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(newNote) });
+      console.log("create in cache");
+    } catch (error) {
+      console.log("cannot create in cache");
+    }
 
     return newNote;
   }
@@ -37,8 +41,12 @@ class Note extends Model {
     if (isUpdate) {
       console.log("update in database");
       const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
-      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNotes[0]) });
-      console.log("update in cache");
+      try {
+        await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNotes[0]) });
+        console.log("update in cache");
+      } catch (error) {
+        console.log("cannot update in cache")
+      }
     }
     return [isUpdate, updatedNotes];
   }
@@ -49,9 +57,11 @@ class Note extends Model {
       const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
       console.log("delete from database");
       try {
-        await cacheClient.clear().sendMessage({ key });
+        await cacheClient.remove().sendMessage({ key });
         console.log("delete from cache");
-      } catch (error) {}
+      } catch (error) {
+        console.log("cannot remove from cache")
+      }
     }
     return isDeleted;
   }
