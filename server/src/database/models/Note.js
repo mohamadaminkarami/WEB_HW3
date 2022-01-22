@@ -33,14 +33,14 @@ class Note extends Model {
   }
 
   static async update(updatedValues, query) {
-    const [isUpdate, updatedNote] = await super.update(updatedValues, query);
+    const [isUpdate, updatedNotes] = await super.update(updatedValues, query);
     if (isUpdate) {
       console.log("update in database");
       const key = `${this.CACHE_NAMESPACE}${query.where.id}`;
-      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNote[0]) });
+      await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNotes[0]) });
       console.log("update in cache");
     }
-    return [isUpdate, updatedNote];
+    return [isUpdate, updatedNotes];
   }
 
   static async destroy(query) {
