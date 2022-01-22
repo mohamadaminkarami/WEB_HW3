@@ -81,7 +81,7 @@ function useUserActions() {
         }
         try {
             const response = await API.get('/notes/', config);
-            return response.data;
+            return response;
         } catch (error) {
             return error.response;
         }
@@ -139,10 +139,6 @@ function useUserActions() {
         } catch (error) {
             return error.response;
         }
-    }
-
-    function jumpTo(address) {
-
     }
 }
 

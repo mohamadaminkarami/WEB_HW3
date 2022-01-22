@@ -1,6 +1,6 @@
 import { LoginOutlined } from "@mui/icons-material";
 import LogoutIcon from "@mui/icons-material/Logout";
-import { Grid } from "@mui/material";
+import { Grid, Tooltip } from "@mui/material";
 import AppBar from "@mui/material/AppBar";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
@@ -13,6 +13,7 @@ import { authAtom } from "../services/auth";
 import { useUserActions } from "../services/requests";
 import "./../App.css";
 import logo from "./../logo.svg";
+import AddIcon from "@mui/icons-material/Add";
 
 export default function Navbar() {
   const auth = useRecoilValue(authAtom);
@@ -24,16 +25,19 @@ export default function Navbar() {
   return (
     <AppBar position="static" style={{ background: "#2E3B55" }}>
       <Toolbar>
-        <IconButton
-          size="small"
-          edge="start"
-          color="inherit"
-          aria-label="menu"
-          sx={{ mr: 1 }}
-        >
-          <img src={logo} className="App-logo" alt="logo" />
-        </IconButton>
-
+        <Link to="notes" style={{ textDecoration: "none" }}>
+          <Tooltip title="Notes" arrow>
+            <IconButton
+              size="small"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 1 }}
+            >
+              <img src={logo} className="App-logo" alt="logo" />
+            </IconButton>
+          </Tooltip>
+        </Link>
         <Grid container spacing={1}>
           <Grid item xs={6} align="left">
             <Typography component="div" sx={{ mt: 0.65 }}>
@@ -42,14 +46,25 @@ export default function Navbar() {
           </Grid>
           <Grid item xs={6} align="right">
             {auth ? (
-              <Button
-                variant=""
-                color="info"
-                size="small"
-                onClick={handleLogout}
-              >
-                <LogoutIcon />
-              </Button>
+              <>
+                <Link to="/notes/new" style={{ textDecoration: "none" }}>
+                  <Tooltip title="Add Note" arrow>
+                    <Button size="small" sx={{ color: "white" }}>
+                      <AddIcon />
+                    </Button>
+                  </Tooltip>
+                </Link>
+                <Tooltip title="Log out" arrow>
+                  <Button
+                    variant=""
+                    color="info"
+                    size="small"
+                    onClick={handleLogout}
+                  >
+                    <LogoutIcon />
+                  </Button>
+                </Tooltip>
+              </>
             ) : (
               <Link to="login" style={{ textDecoration: "none" }}>
                 <Button
