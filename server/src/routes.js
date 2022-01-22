@@ -44,10 +44,9 @@ router.post("/user/register", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY)
 
 router.get("/notes", isAuthenticated(), async (ctx) => {
   const { user } = ctx;
-
   const whereClause = user.isSuperuser ? {} : { where: { authorId: user.userId } };
 
-  ctx.body = await Note.findAll(whereClause);
+  ctx.body = await Note.findAll({ whereClause, attributes: ["id","title", "detail"] });
 });
 
 router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {
