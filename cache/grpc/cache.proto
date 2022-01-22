@@ -12,9 +12,9 @@ package cache;
 
 service CacheHandler {
   rpc GetKey (GetKeyRequest) returns (GetKeyReply) {}
-
   rpc SetKey (SetKeyRequest) returns (SetKeyReply) {}
   rpc Clear (ClearRequest) returns (ClearReply) {}
+  rpc Remove (RemoveKeyRequest) returns (RemoveKeyReply) {}
 }
 
 message GetKeyRequest {

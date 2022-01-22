@@ -25,6 +25,7 @@ type CacheHandlerClient interface {
 	GetKey(ctx context.Context, in *GetKeyRequest, opts ...grpc.CallOption) (*GetKeyReply, error)
 	SetKey(ctx context.Context, in *SetKeyRequest, opts ...grpc.CallOption) (*SetKeyReply, error)
 	Clear(ctx context.Context, in *ClearRequest, opts ...grpc.CallOption) (*ClearReply, error)
+	Remove(ctx context.Context, in *RemoveKeyRequest, opts ...grpc.CallOption) (*RemoveKeyReply, error)
 }
 
 type cacheHandlerClient struct {
@@ -62,6 +63,15 @@ func (c *cacheHandlerClient) Clear(ctx context.Context, in *ClearRequest, opts .
 	return out, nil
 }
 
+func (c *cacheHandlerClient) Remove(ctx context.Context, in *RemoveKeyRequest, opts ...grpc.CallOption) (*RemoveKeyReply, error) {
+	out := new(RemoveKeyReply)
+	err := c.cc.Invoke(ctx, "/cache.CacheHandler/Remove", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // CacheHandlerServer is the server API for CacheHandler service.
 // All implementations must embed UnimplementedCacheHandlerServer
 // for forward compatibility
@@ -69,6 +79,7 @@ type CacheHandlerServer interface {
 	GetKey(context.Context, *GetKeyRequest) (*GetKeyReply, error)
 	SetKey(context.Context, *SetKeyRequest) (*SetKeyReply, error)
 	Clear(context.Context, *ClearRequest) (*ClearReply, error)
+	Remove(context.Context, *RemoveKeyRequest) (*RemoveKeyReply, error)
 	mustEmbedUnimplementedCacheHandlerServer()
 }
 
@@ -84,6 +95,9 @@ func (UnimplementedCacheHandlerServer) SetKey(context.Context, *SetKeyRequest) (
 }
 func (UnimplementedCacheHandlerServer) Clear(context.Context, *ClearRequest) (*ClearReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Clear not implemented")
+}
+func (UnimplementedCacheHandlerServer) Remove(context.Context, *RemoveKeyRequest) (*RemoveKeyReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Remove not implemented")
 }
 func (UnimplementedCacheHandlerServer) mustEmbedUnimplementedCacheHandlerServer() {}
 
@@ -152,6 +166,24 @@ func _CacheHandler_Clear_Handler(srv interface{}, ctx context.Context, dec func(
 	return interceptor(ctx, in, info, handler)
 }
 
+func _CacheHandler_Remove_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RemoveKeyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CacheHandlerServer).Remove(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/cache.CacheHandler/Remove",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CacheHandlerServer).Remove(ctx, req.(*RemoveKeyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // CacheHandler_ServiceDesc is the grpc.ServiceDesc for CacheHandler service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -170,6 +202,10 @@ var CacheHandler_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Clear",
 			Handler:    _CacheHandler_Clear_Handler,
+		},
+		{
+			MethodName: "Remove",
+			Handler:    _CacheHandler_Remove_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
