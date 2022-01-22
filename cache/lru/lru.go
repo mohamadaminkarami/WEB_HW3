@@ -59,3 +59,10 @@ func (cache *Cache) Clear() {
 	cache.list = new(list.List)
 	cache.elements = make(map[string]*list.Element, cache.capacity)
 }
+
+func (cache *Cache) Remove(key string) {
+	if node, ok := cache.elements[key]; ok {
+		delete(cache.elements, key)
+		cache.list.Remove(node)
+	}
+}
