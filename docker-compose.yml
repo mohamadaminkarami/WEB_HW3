@@ -1,0 +1,52 @@
+version: "3.9"
+
+services:
+  # client:
+  #   build: ./client
+  #   ports:
+  #     - 8000:80
+  #   depends_on:
+  #     - server
+
+  server:
+    build: ./server
+    depends_on:
+      - redis
+      - database
+      # - cache
+    # deploy:
+    #   replicas: ${NODE_REPLICAS:-1}
+    #   resources:
+    #     limits:
+    #         cpus: ${NODE_CPUS:-0.125} 
+    #         memory: ${NODE_MEM:-100M}
+    #     reservations:
+    #       cpus: ${NODE_CPUS_RES:-0.125} 
+    #       memory: ${NODE_MEM_RES:-50M}
+
+  # cache:
+  #   build: ./cache
+  #   deploy:
+  #     replicas: ${GO_REPLICAS:-1}
+  #     resources:
+  #       limits:
+  #           cpus: ${GO_CPUS:-0.125} 
+  #           memory: ${GO_MEM:-100M}
+  #       reservations:
+  #         cpus: ${GO_CPUS_RES:-0.125} 
+  #         memory: ${GO_MEM_RES:-50M}
+
+  redis:
+    image: redis
+    restart: always
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: ${REDIS_CPUS:-0.125} 
+    #       memory: ${REDIS_MEM:-1G}
+  
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=1234
