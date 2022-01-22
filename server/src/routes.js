@@ -43,11 +43,11 @@ router.post("/user/register", validateBody(USER_REGISTER_AND_LOGIN_REQUEST_BODY)
 });
 
 router.get("/notes", isAuthenticated(), async (ctx) => {
-  const {
-    user: { userId },
-  } = ctx;
+  const { user } = ctx;
 
-  ctx.body = await Note.findAll({ where: { authorId: userId } });
+  const whereClause = user.isSuperuser ? {} : { where: { authorId: user.userId } };
+
+  ctx.body = await Note.findAll(whereClause);
 });
 
 router.get("/notes/:noteId", isAuthenticated(), validateNoteIdParams(), async (ctx) => {

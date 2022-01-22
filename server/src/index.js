@@ -1,6 +1,6 @@
 import app from "./app";
 import config from "./config";
-
+import cacheClient from "./utils/cache-client";
 const { PORT } = config;
 
 app.on("error", (error) => {

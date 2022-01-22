@@ -1,5 +1,6 @@
-import grpc from "@grpc/grpc-js";
+import grpc from "grpc";
 import protoLoader from "@grpc/proto-loader";
+import grpcPromise from "grpc-promise";
 import path from "path";
 import { fileURLToPath } from "url";
 import config from "../config";
@@ -14,5 +15,7 @@ const packageDefinition = protoLoader.loadSync(PROTO_PATH, { keepCase: true, lon
 
 const cacheProto = grpc.loadPackageDefinition(packageDefinition).cache;
 const cacheClient = new cacheProto.CacheHandler(CACHE_TARGET, grpc.credentials.createInsecure());
+
+grpcPromise.promisifyAll(cacheClient);
 
 export default cacheClient;
