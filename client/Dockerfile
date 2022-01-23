@@ -1,11 +1,11 @@
 # build environment
 FROM node:14-alpine as build
 WORKDIR /app
-ENV PATH /app/node_modules/.bin:$PATH
 COPY package.json ./
 
 RUN yarn install
-COPY . ./
+COPY public ./public
+COPY src ./src
 RUN yarn run build
 
 # production environment

@@ -4,25 +4,17 @@ services:
   redis:
     image: redis
     restart: always
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: ${REDIS_CPUS:-0.125} 
-    #       memory: ${REDIS_MEM:-1G}
-  
+
   database:
     image: postgres
     restart: always
     environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=1234
-      - APP_DB_NAME=webhw3
+      - POSTGRES_USER=${SERVER_DB_USERNAME}
+      - POSTGRES_PASSWORD=${SERVER_DB_PASSWORD}
+      - APP_DB_NAME=${SERVER_DB_NAME}
 
     volumes:
       - ./db:/docker-entrypoint-initdb.d/
-    
-    ports:
-      - 5432:5432
 
   client:
     build: ./client
@@ -31,25 +23,37 @@ services:
     depends_on:
       - server
 
+    environment:
+      - REACT_APP_BACKEND_URL=${CLIENT_REACT_APP_BACKEND_URL}
+      - ENVIRONMENT=${CLIENT_ENVIRONMENT}
+
   server:
     build: ./server
     depends_on:
       - redis
       - database
-      # - cache
-    
+      - cache
+
+    environment:
+      - NODE_ENV=${SERVER_NODE_ENV}
+      - PORT=${SERVER_PORT}
+      - DB_DIALECT=${SERVER_DB_DIALECT}
+      - DB_NAME=${SERVER_DB_NAME}
+      - DB_HOST=${SERVER_DB_HOST}
+      - DB_PORT=${SERVER_DB_PORT}
+      - DB_PASSWORD=${SERVER_DB_PASSWORD}
+      - DB_USERNAME=${SERVER_DB_USERNAME}
+      - CACHE_TARGET=${SERVER_CACHE_TARGET}
+      - JWT_SECRET_KEY=${SERVER_JWT_SECRET_KEY}
+      - TOKEN_EXPIRATION_TIME=${SERVER_TOKEN_EXPIRATION_TIME}
+      - MAXIMUM_REQUEST_PER_MINUTE=${SERVER_MAXIMUM_REQUEST_PER_MINUTE}
+      - REDIS_PORT=${SERVER_REDIS_PORT}
+      - REDIS_HOST=${SERVER_REDIS_HOST}
+
     command: su -c "yarn migrate && yarn start"
 
-
-  # cache:
-  #   build: ./cache
-  #   deploy:
-  #     replicas: ${GO_REPLICAS:-1}
-  #     resources:
-  #       limits:
-  #           cpus: ${GO_CPUS:-0.125} 
-  #           memory: ${GO_MEM:-100M}
-  #       reservations:
-  #         cpus: ${GO_CPUS_RES:-0.125} 
-  #         memory: ${GO_MEM_RES:-50M}
-
+  cache:
+    build: ./cache
+    environment:
+      - grpc_port=${CACHE_GRPC_PORT}
+      - cache_capacity=${CACHE_CAPACITY}
