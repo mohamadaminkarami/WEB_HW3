@@ -69,7 +69,7 @@ func (s *server) Remove(_ context.Context, in *pb.RemoveKeyRequest) (*pb.RemoveK
 func main() {
 	transportCredentials, _ := credentials.NewServerTLSFromFile(crt, key)
 	flag.Parse()
-	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%s", *port))
+	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", *port))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

@@ -9,6 +9,8 @@ class Note extends Model {
     const key = `${this.CACHE_NAMESPACE}${noteId}`;
     try {
       const cachedNote = await cacheClient.getKey().sendMessage({ key });
+      console.log("got from cache");
+
       return new Note(JSON.parse(cachedNote.value));
     } catch (errors) {
       console.log({ errors });
@@ -17,6 +19,7 @@ class Note extends Model {
       if (note) {
         try {
           await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(note) });
+          console.log("create in cache");
         } catch (error) {
           console.log(error);
           console.log("cannot create in cache");
