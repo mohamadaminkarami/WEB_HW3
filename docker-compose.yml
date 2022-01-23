@@ -49,6 +49,7 @@ services:
       - MAXIMUM_REQUEST_PER_MINUTE=${SERVER_MAXIMUM_REQUEST_PER_MINUTE}
       - REDIS_PORT=${SERVER_REDIS_PORT}
       - REDIS_HOST=${SERVER_REDIS_HOST}
+      - SSL_ENABLE=${SERVER_SSL_ENABLE}
 
     command: su -c "yarn migrate && yarn start"
 

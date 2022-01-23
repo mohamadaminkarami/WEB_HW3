@@ -6,19 +6,20 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import config from "../config";
 
-const { CACHE_TARGET } = config;
+const { CACHE_TARGET, SSL_ENABLE } = config;
 const filename = fileURLToPath(import.meta.url);
 
 const dirname = path.dirname(filename);
-
-const rootCert = fs.readFileSync(`${dirname}/../../cert.pem`);
-const sslCreds = grpc.credentials.createSsl(rootCert);
 
 const PROTO_PATH = `${dirname}/../cache.proto`;
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true });
 
 const cacheProto = grpc.loadPackageDefinition(packageDefinition).cache;
-const cacheClient = new cacheProto.CacheHandler(CACHE_TARGET, sslCreds);
+
+const rootCert = SSL_ENABLE ? fs.readFileSync(`${dirname}/../../cert.pem`) : undefined;
+const sslCreds = SSL_ENABLE ? grpc.credentials.createSsl(rootCert) : undefined;
+const credentials = SSL_ENABLE ? sslCreds : grpc.credentials.createInsecure();
+const cacheClient = new cacheProto.CacheHandler(CACHE_TARGET, credentials);
 
 grpcPromise.promisifyAll(cacheClient);
 
