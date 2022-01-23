@@ -36,7 +36,7 @@ function NoteCard(props) {
       </CardContent>
       <CardActions>
         <Link to={`${id}`} style={{ textDecoration: "none" }}>
-          <Button variant="outlined">Learn More</Button>
+          <Button variant="outlined">Open Note</Button>
         </Link>
       </CardActions>
     </Card>
