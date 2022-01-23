@@ -23,8 +23,10 @@ var (
 		"port",
 		utils.GetEnv("grpc_port", "50051"),
 		"The server port")
-	crt = "certs/cert.pem"
-	key = "certs/key.pem"
+
+	crt        = "certs/cert.pem"
+	key        = "certs/key.pem"
+	sslEnabled = utils.GetEnv("SSL_ENABLE", "true")
 )
 
 type server struct {
@@ -66,6 +68,14 @@ func (s *server) Remove(_ context.Context, in *pb.RemoveKeyRequest) (*pb.RemoveK
 	return &pb.RemoveKeyReply{}, nil
 }
 
+func initServer(transportCredentials credentials.TransportCredentials) *grpc.Server {
+	if sslEnabled == "true" {
+		return grpc.NewServer(grpc.Creds(transportCredentials))
+	} else {
+		return grpc.NewServer()
+	}
+}
+
 func main() {
 	transportCredentials, _ := credentials.NewServerTLSFromFile(crt, key)
 	flag.Parse()
@@ -73,7 +83,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	s := grpc.NewServer(grpc.Creds(transportCredentials))
+	s := initServer(transportCredentials)
 	pb.RegisterCacheHandlerServer(s, &server{})
 	log.Printf("server listening at %v", lis.Addr())
 	if err := s.Serve(lis); err != nil {
