@@ -69,6 +69,7 @@ func (s *server) Remove(_ context.Context, in *pb.RemoveKeyRequest) (*pb.RemoveK
 }
 
 func initServer(transportCredentials credentials.TransportCredentials) *grpc.Server {
+	log.Printf("ssl: %s", sslEnabled)
 	if sslEnabled == "true" {
 		return grpc.NewServer(grpc.Creds(transportCredentials))
 	} else {

@@ -19,6 +19,7 @@ const cacheProto = grpc.loadPackageDefinition(packageDefinition).cache;
 const rootCert = SSL_ENABLE ? fs.readFileSync(`${dirname}/../../cert.pem`) : undefined;
 const sslCreds = SSL_ENABLE ? grpc.credentials.createSsl(rootCert) : undefined;
 const credentials = SSL_ENABLE ? sslCreds : grpc.credentials.createInsecure();
+console.log("ssl:", SSL_ENABLE);
 const cacheClient = new cacheProto.CacheHandler(CACHE_TARGET, credentials);
 
 grpcPromise.promisifyAll(cacheClient);
