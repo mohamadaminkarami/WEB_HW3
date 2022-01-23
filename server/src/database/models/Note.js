@@ -9,13 +9,21 @@ class Note extends Model {
     const key = `${this.CACHE_NAMESPACE}${noteId}`;
     try {
       const cachedNote = await cacheClient.getKey().sendMessage({ key });
+      console.log("got from cache");
+
       return new Note(JSON.parse(cachedNote.value));
     } catch (errors) {
-      console.log("got from database");
-
+      console.log({ errors });
       const note = await super.findByPk(noteId);
+      console.log("got from database");
       if (note) {
-        await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(note) });
+        try {
+          await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(note) });
+          console.log("create in cache");
+        } catch (error) {
+          console.log(error);
+          console.log("cannot create in cache");
+        }
       }
       return note;
     }
@@ -30,6 +38,8 @@ class Note extends Model {
       await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(newNote) });
       console.log("create in cache");
     } catch (error) {
+      console.log({ error });
+
       console.log("cannot create in cache");
     }
 
@@ -45,7 +55,9 @@ class Note extends Model {
         await cacheClient.setKey().sendMessage({ key, value: JSON.stringify(updatedNotes[0]) });
         console.log("update in cache");
       } catch (error) {
-        console.log("cannot update in cache")
+        console.log({ error });
+
+        console.log("cannot update in cache");
       }
     }
     return [isUpdate, updatedNotes];
@@ -60,7 +72,8 @@ class Note extends Model {
         await cacheClient.remove().sendMessage({ key });
         console.log("delete from cache");
       } catch (error) {
-        console.log("cannot remove from cache")
+        console.log({ error });
+        console.log("cannot remove from cache");
       }
     }
     return isDeleted;

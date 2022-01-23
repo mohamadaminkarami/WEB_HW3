@@ -18,6 +18,7 @@ const config = {
   JWT_SECRET_KEY: getEnvVariable("JWT_SECRET_KEY"),
   TOKEN_EXPIRATION_TIME: getEnvVariable("TOKEN_EXPIRATION_TIME", "1d"),
   CACHE_TARGET: getEnvVariable("CACHE_TARGET", "localhost:50051"),
+  SSL_ENABLE: getEnvVariable("SSL_ENABLE", "false") === "true", 
   MAXIMUM_REQUEST_PER_MINUTE: parseInt(getEnvVariable("MAXIMUM_REQUEST_PER_MINUTE", 10), 10),
 };
 

@@ -16,7 +16,7 @@ async function createSuperuser(answers) {
   if (user) {
     console.log("username already exists");
   } else {
-    await User.create({ username: answers.username, password: answers.password, isSuseruser: true });
+    await User.create({ username: answers.username, password: answers.password, isSuperuser: true });
   }
 }
 
